@@ -16,6 +16,8 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-###> data ###
+###> data + docker ###
 /data/*/
+/docker/logs/*
+/docker/database/data/*
 ###< data ###
