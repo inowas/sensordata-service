@@ -11,12 +11,21 @@ services:
     volumes:
       - ./docker/database/data:/var/lib/postgresql/data
 
-  php-fpm:
+  php:
     build:
       context: ./docker/php-fpm
     depends_on:
       - db
-    volumes: [ './:/var/www/symfony:cached' ]
+    volumes:
+      - './:/var/www/symfony:rw,cached'
+
+  api:
+    build:
+      context: ./docker/php-fpm
+    depends_on:
+      - db
+    volumes:
+      - './:/var/www/symfony:ro'
 
   nginx:
     build:
@@ -28,7 +37,7 @@ services:
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d
       - ./docker/logs:/var/log
     depends_on:
-      - php-fpm
+      - api
     ports:
       - "80:80"
 

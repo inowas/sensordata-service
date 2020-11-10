@@ -6,20 +6,25 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="sensor_parameters")
  **/
-class Parameter
+class Parameter implements JsonSerializable
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue()
+     * @ORM\Column(type="uuid", unique=true)
+     * @Groups({"sensor_details", "parameter_details", "parameter_data"})
      */
-    protected int $id;
+    protected UuidInterface $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Sensor", inversedBy="parameters", cascade={"persist"})
@@ -30,30 +35,47 @@ class Parameter
     /**
      * @var string $type
      * @ORM\Column(name="type", type="string")
+     * @Groups({"sensor_list", "sensor_details", "parameter_details", "parameter_data"})
      */
     private string $type;
 
     /**
      * @ORM\Column(name="name", type="string")
+     * @Groups({"sensor_details", "parameter_details", "parameter_data"})
      */
     private string $name;
 
     /**
-     * @var ArrayCollection $dataSets
      * @ORM\OneToMany(targetEntity="App\Entity\DataSet", mappedBy="parameter", cascade={"persist"})
+     * @Groups({"parameter_details"})
      */
-    private ArrayCollection $dataSets;
+    private Collection $dataSets;
 
-    public function __construct(string $type, string $name = '')
+    public static function fromTypeAndName(string $type, string $name): self
     {
+        return new self($type, $name);
+    }
+
+    private function __construct(string $type, string $name = '')
+    {
+        $this->id = Uuid::uuid4();
         $this->type = $type;
         $this->name = $name;
         $this->dataSets = new ArrayCollection();
     }
 
-    public function id(): int
+    public function id(): UuidInterface
     {
         return $this->id;
+    }
+
+    /**
+     * @return UuidInterface
+     * @Groups({"parameter_details", "parameter_data"})
+     */
+    public function getSensorId(): UuidInterface
+    {
+        return $this->sensor()->id();
     }
 
     public function type(): string
@@ -66,8 +88,87 @@ class Parameter
         return $this->name;
     }
 
-    public function dataSets(): ArrayCollection
+    public function dataSets(): array
     {
-        return $this->dataSets;
+        return $this->dataSets->toArray();
+    }
+
+    public function addDataSet(DataSet $ds): self
+    {
+        $ds->setParameter($this);
+        $this->dataSets->add($ds);
+        return $this;
+    }
+
+    /**
+     * @return array
+     * @Groups({"parameter_details"})
+     */
+    public function getDataSets(): array
+    {
+        $data = [];
+        /** @var DataSet $dataSet */
+        foreach ($this->dataSets() as $dataSet) {
+            $data[] = [
+                'id' => $dataSet->id()->toString(),
+                'first' => $dataSet->firstDateTime()->format(DATE_ATOM),
+                'last' => $dataSet->lastDateTime()->format(DATE_ATOM),
+                'numberOfValues' => $dataSet->numberOfValues(),
+                'dataSource' => $dataSet->dataSource()->toInt()
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return array
+     * @Groups({"parameter_data"})
+     */
+    public function getData(): array
+    {
+        $timestamps = [];
+        $values = [];
+        /** @var DataSet $dataSet */
+        foreach ($this->dataSets as $dataSet) {
+            /** @var DateTimeValue $dateTimeValue */
+            foreach ($dataSet->data() as $dateTimeValue) {
+                $timestamps[] = $dateTimeValue->timestamp();
+                $values[] = $dateTimeValue->value();
+            }
+        }
+
+        array_multisort($timestamps, $values);
+
+        $data = [];
+        foreach ($timestamps as $key => $timestamp) {
+            $data[] = [$timestamps[$key], $values[$key]];
+        }
+        return $data;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id(),
+            'type' => $this->type(),
+            'name' => $this->name(),
+            'dataSets' => $this->dataSets()
+        ];
+    }
+
+    /**
+     * @param Sensor $sensor
+     * @return Parameter
+     */
+    public function setSensor(Sensor $sensor): Parameter
+    {
+        $this->sensor = $sensor;
+        return $this;
+    }
+
+    public function sensor(): Sensor
+    {
+        return $this->sensor;
     }
 }
