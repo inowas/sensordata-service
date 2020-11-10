@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     volumes:
-      - './:/var/www/symfony:rw,cached'
+      - './src-php/:/var/www/symfony:rw,cached'
 
   api:
     build:
@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
     volumes:
-      - './:/var/www/symfony:ro'
+      - './src-php/:/var/www/symfony:ro'
 
   nginx:
     build:
