@@ -40,7 +40,6 @@ class SensorTest extends KernelTestCase
         ]);
         $parameter = Parameter::fromTypeAndName('t', 'temperature')->addDataSet($dataSet);
         $sensor = Sensor::fromProjectNameAndLocation('testProject', 'testName', 'testLocation')->addParameter($parameter);
-        //$parameter->setSensor($sensor);
 
         $this->entityManager->persist($sensor);
         $this->entityManager->flush();
@@ -93,7 +92,7 @@ class SensorTest extends KernelTestCase
             'name' => 'temperature',
             'dataSets' => [
                 [
-                    'id' => $dataSet->id()->toString(),
+                    'id' => $dataSet->id(),
                     'first' => '2020-10-01T00:00:00+00:00',
                     'last' => '2020-10-03T00:00:00+00:00',
                     'numberOfValues' => 3,

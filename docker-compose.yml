@@ -3,6 +3,7 @@ version: '3'
 services:
   db:
     image: library/postgres:13-alpine
+    restart: always
     environment:
       POSTGRES_SERVER: db
       POSTGRES_USER: inowas
@@ -10,10 +11,13 @@ services:
       POSTGRES_DB: inowas
     volumes:
       - ./docker/database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   php:
     build:
       context: ./docker/php-fpm
+    restart: always
     depends_on:
       - db
     volumes:
@@ -22,10 +26,27 @@ services:
   api:
     build:
       context: ./docker/php-fpm
+    restart: always
     depends_on:
       - db
     volumes:
       - './src-php/:/var/www/symfony:ro'
+
+  flask-api:
+    build:
+      context: ./src-py
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./src-py/app:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONIOENCODING=UTF-8
+      - DATABASE_URI=postgresql://inowas:inowas@db:5432/inowas
+    ports:
+      - "5000:5000"
+    command: [ "python", "-u", "app.py" ]
 
   nginx:
     build:

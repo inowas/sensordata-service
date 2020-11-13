@@ -1,22 +1,28 @@
-with data as (select s.id                      as id,
-                     s.project                 as project,
-                     s.name                    as sensor_name,
-                     p.name                    as parameter_name,
-                     d.timestamp,
-                     to_timestamp(d.timestamp) as date_time,
-                     d.value
-              from sensors as s
-                       left join parameters p on s.id = p.sensor_id
-                       left join datasets ds on p.id = ds.parameter_id
-                       left join data d on ds.id = d.dataset_id
-              group by date_time, s.id, s.project, s.name, s.location, p.id, p.type, p.name, d.timestamp,
-                       to_timestamp(d.timestamp)::date, d.value)
+CREATE MATERIALIZED VIEW public.materialized_view_data_1d AS
+ WITH data AS (
+         SELECT s.id,
+            s.project,
+            s.name AS sensor_name,
+            p.name AS parameter_name,
+            d."timestamp",
+            to_timestamp((d."timestamp")::double precision) AS date_time,
+            d.value
+           FROM (((public.sensors s
+             LEFT JOIN public.parameters p ON ((s.id = p.sensor_id)))
+             LEFT JOIN public.datasets ds ON ((p.id = ds.parameter_id)))
+             LEFT JOIN public.data d ON ((ds.id = d.dataset_id)))
+          GROUP BY (to_timestamp((d."timestamp")::double precision)), s.id, s.project, s.name, s.location, p.id, p.type, p.name, d."timestamp", ((to_timestamp((d."timestamp")::double precision))::date), d.value
+        )
+ SELECT data.id,
+    data.project,
+    data.sensor_name,
+    data.parameter_name,
+    (date_trunc('day'::text, data.date_time))::date AS date,
+    avg(data.value) AS avg_daily_value
+   FROM data
+  GROUP BY (date_trunc('day'::text, data.date_time)), data.id, data.project, data.sensor_name, data.parameter_name
+  WITH NO DATA;
 
-SELECT data.id                                 as id,
-       data.project                            as project,
-       data.sensor_name                        as sensor_name,
-       data.parameter_name                     as parameter_name,
-       DATE_TRUNC('day', data.date_time)::date AS date,
-       avg(data.value)                         as avg_daily_value
-FROM data
-GROUP BY DATE_TRUNC('day', data.date_time), data.id, data.project, data.sensor_name, data.parameter_name;
+
+ALTER TABLE public.materialized_view_data_1d OWNER TO inowas;
+REFRESH MATERIALIZED VIEW public.materialized_view_data_1d;

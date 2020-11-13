@@ -11,7 +11,7 @@ use JsonSerializable;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="data", indexes={@ORM\Index(name="data_index", columns={"timestamp", "data_id"})})
+ * @ORM\Table(name="data", indexes={@ORM\Index(name="data_index", columns={"timestamp", "dataset_id"})})
  **/
 class DateTimeValue implements JsonSerializable
 {
@@ -24,7 +24,7 @@ class DateTimeValue implements JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\DataSet", inversedBy="data")
-     * @ORM\JoinColumn(name="data_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="dataset_id", referencedColumnName="id")
      */
     private DataSet $dataSet;
 

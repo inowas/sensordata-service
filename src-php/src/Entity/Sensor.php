@@ -102,6 +102,34 @@ class Sensor implements JsonSerializable
         return $this;
     }
 
+    public function hasParameterWithType(string $type): bool
+    {
+        return $this->parameters()->exists(function ($key, $parameter) use ($type) {
+            return $type === $parameter->name();
+        });
+    }
+
+    public function hasParameterWithName(string $name): bool
+    {
+        /** @var Parameter $parameter */
+        return $this->parameters()->exists(function ($key, $parameter) use ($name) {
+            return $name === $parameter->name();
+        });
+    }
+
+    public function getParameterWithName(string $name): ?Parameter
+    {
+        $filteredParameter = $this->parameters()->filter(function ($parameter) use ($name) {
+            return $name === $parameter->name();
+        });
+
+        if (count($filteredParameter) === 1) {
+            return $filteredParameter[0];
+        }
+
+        return null;
+    }
+
     public function parameters(): Collection
     {
         return $this->parameters;

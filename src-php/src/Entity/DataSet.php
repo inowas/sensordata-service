@@ -11,8 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -22,9 +20,10 @@ class DataSet implements JsonSerializable
 {
     /**
      * @ORM\Id
-     * @ORM\Column(name="id", type="uuid", unique=true)
+     * @ORM\Column(name="id", type="integer", unique=true)
+     * @ORM\GeneratedValue()
      */
-    protected UuidInterface $id;
+    protected int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Parameter", inversedBy="dataSets", cascade={"persist"})
@@ -79,7 +78,6 @@ class DataSet implements JsonSerializable
      */
     private function __construct(DataSource $ds, array $dateTimeValues, ?string $filename = '')
     {
-        $this->id = Uuid::uuid4();
         $this->createdAt = new DateTime();
         $this->dataSource = $ds->toInt();
         $this->data = new ArrayCollection();
@@ -115,7 +113,7 @@ class DataSet implements JsonSerializable
         $this->filename = $filename ?? '';
     }
 
-    public function id(): UuidInterface
+    public function id(): int
     {
         return $this->id;
     }
@@ -158,7 +156,7 @@ class DataSet implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->id()->toString(),
+            'id' => $this->id(),
             'dataSource' => $this->dataSource()->toInt(),
             'createdAt' => $this->createdAt()->getTimestamp(),
             'data' => $this->data()

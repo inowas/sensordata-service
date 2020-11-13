@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="sensor_parameters")
+ * @ORM\Table(name="parameters")
  **/
 class Parameter implements JsonSerializable
 {
@@ -110,7 +110,7 @@ class Parameter implements JsonSerializable
         /** @var DataSet $dataSet */
         foreach ($this->dataSets() as $dataSet) {
             $data[] = [
-                'id' => $dataSet->id()->toString(),
+                'id' => $dataSet->id(),
                 'first' => $dataSet->firstDateTime()->format(DATE_ATOM),
                 'last' => $dataSet->lastDateTime()->format(DATE_ATOM),
                 'numberOfValues' => $dataSet->numberOfValues(),

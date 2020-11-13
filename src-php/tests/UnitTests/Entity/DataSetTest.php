@@ -24,7 +24,6 @@ class DataSetTest extends TestCase
 
         $dataSet = DataSet::fromDatasourceWithData($dataSource, $data);
         self::assertInstanceOf(DataSet::class, $dataSet);
-        self::assertInstanceOf(UuidInterface::class, $dataSet->id());
         self::assertEquals($dataSource, $dataSet->dataSource());
         self::assertInstanceOf(DateTime::class, $dataSet->createdAt());
         self::assertEquals($data, $dataSet->data());
