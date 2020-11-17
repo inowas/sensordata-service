@@ -1,0 +1,4 @@
+REFRESH MATERIALIZED VIEW public.view_data_6h;
+REFRESH MATERIALIZED VIEW public.view_data_12h;
+REFRESH MATERIALIZED VIEW public.view_data_1d;
+REFRESH MATERIALIZED VIEW public.view_data_1w;

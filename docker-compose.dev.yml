@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  db:
+    ports:
+      - "5432:5432"
+
+  php:
+
+  flask-api:
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONIOENCODING=UTF-8
+    ports:
+      - "5000:5000"

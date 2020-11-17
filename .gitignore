@@ -17,6 +17,7 @@
 ###< symfony/phpunit-bridge ###
 
 ###> data + docker ###
+/.env
 /data/*/
 /docker/logs/*
 /docker/database/data/*
