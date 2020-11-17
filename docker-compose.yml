@@ -30,8 +30,8 @@ services:
     volumes:
       - ./src-py/app:/app
     environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONIOENCODING=UTF-8
-      - DATABASE_URI=${FLASK_DATABASE_URI}
-      - DEBUG=${FLASK_DEBUG}
+      PYTHONUNBUFFERED: 1
+      PYTHONIOENCODING: "UTF-8"
+      DATABASE_URI: "${FLASK_DATABASE_URI}"
+      DEBUG: "${FLASK_DEBUG}"
     command: [ "python", "-u", "app.py" ]
