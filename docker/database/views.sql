@@ -23,6 +23,7 @@ alter table view_sensor_parameters
     owner to inowas;
 -- END SENSOR PARAMETER VIEW --
 
+
 -- BEGIN RAW DATA VIEW --
 drop view if exists view_data_raw;
 create view view_data_raw(id, project, sensor_name, parameter_name, date_time, value) as

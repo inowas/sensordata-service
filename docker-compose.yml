@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   db:
@@ -34,4 +34,38 @@ services:
       PYTHONIOENCODING: "UTF-8"
       DATABASE_URI: "${FLASK_DATABASE_URI}"
       DEBUG: "${FLASK_DEBUG}"
+    expose:
+      - 5000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flask-api.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.flask-api.tls=true"
+      - "traefik.http.routers.flask-api.tls.certresolver=leresolver"
+      - "traefik.port=5000"
     command: [ "python", "-u", "app.py" ]
+
+  traefik:
+    image: "traefik:v2.3"
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker"
+      - "--api"
+      - "--certificatesresolvers.leresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.leresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.leresolver.acme.storage=/acme.json"
+      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./docker/traefik/acme.json:/acme.json"
+    labels:
+      # global redirect to https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+      # middleware redirect
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
