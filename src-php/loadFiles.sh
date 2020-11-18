@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 docker-compose exec php bin/console app:load-uit-files
 docker-compose exec php bin/console doctrine:query:sql "REFRESH MATERIALIZED VIEW public.view_data_6h;"
 docker-compose exec php bin/console doctrine:query:sql "REFRESH MATERIALIZED VIEW public.view_data_12h;"
