@@ -27,6 +27,7 @@ services:
     restart: always
     depends_on:
       - db
+      - traefik
     volumes:
       - ./src-py/app:/app
     environment:
@@ -38,34 +39,37 @@ services:
       - 5000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.flask-api.rule=Host(`${HOST}`)"
-      - "traefik.http.routers.flask-api.tls=true"
-      - "traefik.http.routers.flask-api.tls.certresolver=leresolver"
-      - "traefik.port=5000"
+      - "traefik.http.routers.flask.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.flask.entrypoints=web"
+      - "traefik.http.routers.flask.middlewares=https_redirect"
+
+      - "traefik.http.routers.flask-secured.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.flask-secured.entrypoints=websecure"
+      - "traefik.http.routers.flask-secured.tls=true"
+      - "traefik.http.routers.flask-secured.tls.certresolver=myresolver"
+
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
     command: [ "python", "-u", "app.py" ]
 
   traefik:
     image: "traefik:v2.3"
     command:
+      - "--log.level=ERROR"
+      - "--log.filePath=/traefik/traefik.log"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.docker"
-      - "--api"
-      - "--certificatesresolvers.leresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      - "--certificatesresolvers.leresolver.acme.email=${EMAIL}"
-      - "--certificatesresolvers.leresolver.acme.storage=/acme.json"
-      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.caserver=${CA_SERVER}"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/traefik/acme.json"
     ports:
       - "80:80"
       - "443:443"
+
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./docker/traefik/acme.json:/acme.json"
-    labels:
-      # global redirect to https
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-
-      # middleware redirect
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "./docker/traefik:/traefik"
