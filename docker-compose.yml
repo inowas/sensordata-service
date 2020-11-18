@@ -50,7 +50,6 @@ services:
 
       - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
-    command: [ "python", "-u", "app.py" ]
 
   traefik:
     image: "traefik:v2.3"
