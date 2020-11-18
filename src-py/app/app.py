@@ -8,6 +8,13 @@ import time
 db = SQLAlchemy()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", default='')
+app.secret_key = '2349978342978342907889709154089438989043049835890'
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['DEBUG'] = os.environ.get("DEBUG", default='false') == 'true'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", default='')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("DEBUG", default='false') == 'true'
+
 CORS(app)
 db.init_app(app)
 
@@ -29,6 +36,7 @@ def sensor_list():
 
 
 @app.route('/sensors/project/<project>/sensor/<sensor>/parameter/<parameter>')
+@app.route('/sensors/project/<project>/sensor/<sensor>/property/<parameter>')
 def sensor_data(project, sensor, parameter):
     valid_time_resolution_list = ['RAW', '6H', '12H', '1D', '2D', '1W']
     time_resolution = request.args.get('timeResolution', '1D').upper()
@@ -117,12 +125,3 @@ def sensor_data(project, sensor, parameter):
         .rename(columns={"date_time": "ts", "value": "val"})
 
     return df.to_json(date_unit='s', orient='records')
-
-
-if __name__ == '__main__':
-    app.secret_key = '2349978342978342907889709154089438989043049835890'
-    app.config['SESSION_TYPE'] = 'filesystem'
-    app.config['DEBUG'] = os.environ.get("DEBUG", default='false') == 'true'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", default='')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.environ.get("DEBUG", default='false') == 'true'
-    app.run(debug=app.config['DEBUG'], host='0.0.0.0')
