@@ -10,6 +10,7 @@ use App\Entity\Parameter;
 use App\Entity\Sensor;
 use App\Model\DataSource;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -63,11 +64,16 @@ class LoadUitFiles extends Command
             $csvFile = $file->getRealPath();
             $fileName = $file->getFilenameWithoutExtension();
 
+            if ($fs->exists(sprintf("%s/%s", $folderWithProcessedCSVFiles, $file->getFilename()))) {
+                $fs->remove(sprintf("%s/%s", $folderWithNewCSVFiles, $file->getFilename()));
+                continue;
+            }
+
             $output->writeln('Read file: ' . $file->getFilename());
 
             try {
                 [$projectName, $sensorName, $timestamp] = explode('_', $fileName);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $output->writeln('Filename not correctly formatted.');
                 $fs->rename(
                     sprintf("%s/%s", $folderWithNewCSVFiles, $file->getFilename()),
@@ -95,7 +101,7 @@ class LoadUitFiles extends Command
 
             try {
                 $data = $this->readDataFromFile($csvFile);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $output->writeln($e->getMessage());
                 $fs->rename(
                     sprintf("%s/%s", $folderWithNewCSVFiles, $file->getFilename()),
@@ -150,7 +156,7 @@ class LoadUitFiles extends Command
     /**
      * @param string $absoluteFileName
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function readDataFromFile(string $absoluteFileName): array
     {
@@ -167,7 +173,7 @@ class LoadUitFiles extends Command
                     }
                     $parameterName = $this->get_between($headerCell, '{', '}');
                     if ($parameterName === false || strlen($parameterName) === 0) {
-                        throw new \Exception('Wrong Header Format.');
+                        throw new Exception('Wrong Header Format.');
                     }
                     $header[] = $parameterName;
                 }
