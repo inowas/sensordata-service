@@ -118,6 +118,12 @@ def sensor_data(project, sensor, parameter):
     if (df.empty):
         return jsonify([])
 
+    if time_resolution == 'RAW':
+        df.set_index('date_time') \
+            .reset_index(level=0) \
+            .rename(columns={"date_time": "ts", "value": "val"})
+        return df.to_json(date_unit='s', orient='records')
+
     df.set_index('date_time') \
         .resample(time_resolution) \
         .interpolate(method='time') \
