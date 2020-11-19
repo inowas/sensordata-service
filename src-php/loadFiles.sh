@@ -18,6 +18,4 @@ if [ ${#files[@]} -gt 0 ]; then
   docker-compose exec php bin/console doctrine:query:sql "REFRESH MATERIALIZED VIEW public.view_data_1d;"
   docker-compose exec php bin/console doctrine:query:sql "REFRESH MATERIALIZED VIEW public.view_data_2d;"
   docker-compose exec php bin/console doctrine:query:sql "REFRESH MATERIALIZED VIEW public.view_data_1w;"
-  rm -rf ${"$INBOX_PATH"/*:?}
-  rm -rf ${"$INBOX_PATH"/.*:?}
 fi
