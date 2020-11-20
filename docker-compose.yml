@@ -37,6 +37,7 @@ services:
       DEBUG: "${FLASK_DEBUG}"
     expose:
       - 5000
+    entrypoint: [ 'gunicorn',  '--config',  'gunicorn_config.py', 'app:app' ]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.flask.rule=Host(`${HOST}`)"
@@ -53,6 +54,7 @@ services:
 
   traefik:
     image: "traefik:v2.3"
+    restart: always
     command:
       - "--log.level=ERROR"
       - "--log.filePath=/traefik/traefik.log"
