@@ -69,7 +69,7 @@ def sensor_data(project, sensor, parameter):
             "and parameter_name = '{2}' " \
         .format(sensor, project, parameter)
 
-    start = request.args.get('start', None)
+    start = request.args.get('start', None) or request.args.get('begin', None)
     if start is not None:
         query += "and date_time >= to_timestamp({0}) ".format(int(start))
 
@@ -77,7 +77,7 @@ def sensor_data(project, sensor, parameter):
     if end is not None:
         query += "and date_time <= to_timestamp({0}) ".format(int(end))
 
-    gte = request.args.get('gte', None)
+    gte = request.args.get('gte', None) or request.args.get('min', None)
     if gte is not None:
         query += "and value >= {0} ".format(float(gte))
 
@@ -85,7 +85,7 @@ def sensor_data(project, sensor, parameter):
     if gt is not None:
         query += "and value > {0} ".format(float(gt))
 
-    lte = request.args.get('lte', None)
+    lte = request.args.get('lte', None) or request.args.get('max', None)
     if lte is not None:
         query += "and value <= {0} ".format(float(lte))
 
