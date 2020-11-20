@@ -113,7 +113,7 @@ class LoadUitFiles extends Command
             $keys = array_keys($data);
 
             foreach ($keys as $parameterName) {
-                $parameter = $parameters[$parameterName] ?? null;
+                $parameter = $this->sensorParameters[$parameterName] ?? null;
                 if (null === $parameter) {
                     $parameter = Parameter::fromTypeAndName($parameterName, $parameterName);
                     $parameter->setSensor($sensor);
