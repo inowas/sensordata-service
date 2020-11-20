@@ -9,6 +9,7 @@ use App\Entity\DateTimeValue;
 use App\Entity\Parameter;
 use App\Entity\Sensor;
 use App\Model\DataSource;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -53,6 +54,7 @@ class LoadUitFiles extends Command
         }
 
         $finder = new Finder();
+        $finder->sortByName();
         $finder->files()->in($folderWithNewCSVFiles);
         if (!$finder->hasResults()) {
             $output->writeln('No files found.');
@@ -123,7 +125,7 @@ class LoadUitFiles extends Command
 
                 foreach ($data[$parameterName] as $key => $dtVal) {
                     $data[$parameterName][$key] = DateTimeValue::fromDateTimeValue(
-                        new \DateTime($dtVal[0]),
+                        new DateTime($dtVal[0]),
                         $dtVal[1]
                     );
                 }
@@ -183,7 +185,7 @@ class LoadUitFiles extends Command
 
             foreach ($lineData as $key => $lineDatum) {
                 if ($key === 0) {
-                    $lineData[$key] = \DateTime::createFromFormat('d.m.Y H:i:s', $lineDatum)->format(DATE_ATOM);
+                    $lineData[$key] = DateTime::createFromFormat('d.m.Y H:i:s', $lineDatum)->format(DATE_ATOM);
                     continue;
                 }
 
