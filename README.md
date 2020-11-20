@@ -61,6 +61,23 @@ Get values from a specific sensor-parameter
     }]
 ```
 
+Optional parameters as search string in url
+
+* timeResolution ('RAW', '6H', '12H', '1D', '2D', '1W'), default: 1D
+* dateFormat ('iso', 'epoch'), default: epoch
+* start (unix timestamp)
+* end (unix timestamp)
+* gte (float, >= value)
+* gt (float, > value)
+* lte (float, <= value)
+* lt (float, > value)
+* excl (float, <> value)
+
+Example:
+
+```
+http --json https://sds.example/sensors/project/DEU1/sensor/I-6/parameter/ec?timeResolution=1D&dateFormat=iso&start=1577836800&end=1609459200&gt=-100.0&excl=0
+```
 
 ## Production use
 

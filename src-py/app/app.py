@@ -1,9 +1,8 @@
-from flask import abort, Flask, request, render_template, jsonify
+from flask import abort, Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import os
-import time
 
 db = SQLAlchemy()
 
@@ -70,13 +69,33 @@ def sensor_data(project, sensor, parameter):
             "and parameter_name = '{2}' " \
         .format(sensor, project, parameter)
 
-    gte = request.args.get('gte', None) or request.args.get('start', None)
-    if gte is not None:
-        query += "and date_time >= to_timestamp({0}) ".format(int(gte))
+    start = request.args.get('start', None)
+    if start is not None:
+        query += "and date_time >= to_timestamp({0}) ".format(int(start))
 
-    lte = request.args.get('lte', None) or request.args.get('end', None)
+    end = request.args.get('end', None)
+    if end is not None:
+        query += "and date_time <= to_timestamp({0}) ".format(int(end))
+
+    gte = request.args.get('gte', None)
+    if gte is not None:
+        query += "and value >= {0} ".format(float(gte))
+
+    gt = request.args.get('gte', None)
+    if gt is not None:
+        query += "and value > {0} ".format(float(gt))
+
+    lte = request.args.get('lte', None)
     if lte is not None:
-        query += "and date_time <= to_timestamp({0}) ".format(int(lte))
+        query += "and value <= {0} ".format(float(lte))
+
+    lt = request.args.get('lt', None)
+    if lt is not None:
+        query += "and value < {0} ".format(float(lt))
+
+    excl = request.args.get('excl', None)
+    if excl is not None:
+        query += "and value <> {0} ".format(float(excl))
 
     query += "order by date_time"
     df = pd.read_sql_query(query, db.engine)
