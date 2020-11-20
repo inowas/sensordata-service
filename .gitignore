@@ -20,5 +20,6 @@
 /.env
 /data/*/
 /docker/logs/*
+/docker/traefik
 /docker/database/data/*
 ###< data ###
