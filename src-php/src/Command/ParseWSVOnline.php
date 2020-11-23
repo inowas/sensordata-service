@@ -32,27 +32,24 @@ class ParseWSVOnline extends Command
     protected function configure(): void
     {
         $this->setDescription('Reads live data from the WSV-api.');
-        $this->addArgument('station', InputArgument::REQUIRED, 'The name, number or uuid of the station');
+        $this->addArgument('stations', InputArgument::REQUIRED, 'The name, number or uuid of the stations, comma separated.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $station = strtoupper($input->getArgument('station'));
-        $url = sprintf('https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?ids=%s&includeTimeseries=true&includeCurrentMeasurement=true', $station);
+        $stations = $input->getArgument('stations');
+        $url = sprintf('https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations.json?ids=%s&includeTimeseries=true&includeCurrentMeasurement=true', $stations);
         $content = file_get_contents($url);
         if ($content === false) {
             $output->writeln('Station not found!');
             return Command::FAILURE;
         }
 
-
         $datasets = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
-
         foreach ($datasets as $dataset) {
             $response = WsvApiStationResponse::fromArr($dataset);
             $projectName = 'WSV';
-            $sensorName = $station;
-
+            $sensorName = $response->shortname();
             $shortName = 'W';
 
             $location = json_encode([
