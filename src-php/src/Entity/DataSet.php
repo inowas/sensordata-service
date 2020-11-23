@@ -138,6 +138,26 @@ class DataSet implements JsonSerializable
         return $this->data->toArray();
     }
 
+    public function addDateTimeValue(DateTimeValue $dtValue): void
+    {
+        /** @var DateTimeValue $value */
+        foreach ($this->data() as $value) {
+            if ($value->dateTime()->getTimestamp() === $dtValue->timestamp()) {
+                return;
+            }
+        }
+
+        $this->data[] = $dtValue;
+        $this->numberOfValues = count($this->data());
+        if ($dtValue->dateTime()->getTimestamp() < $this->firstDateTime->getTimestamp()) {
+            $this->firstDateTime = new DateTime(sprintf("@%s", $dtValue->dateTime()->getTimestamp()));
+        }
+
+        if ($dtValue->dateTime()->getTimestamp() > $this->lastDateTime->getTimestamp()) {
+            $this->lastDateTime = new DateTime(sprintf("@%s", $dtValue->dateTime()->getTimestamp()));
+        }
+    }
+
     public function firstDateTime(): DateTime
     {
         return $this->firstDateTime;
