@@ -75,6 +75,7 @@ class ParseWSVOnline extends Command
                 $parameter->setSensor($sensor);
                 $dataset = DataSet::fromDatasourceWithData(DataSource::fromWSVApi(), [$dateTimeValue], '');
                 $parameter->addDataSet($dataset);
+                $dataset->setParameter($parameter);
             }
 
             /** @var DataSet $dataset */
