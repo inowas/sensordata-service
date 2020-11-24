@@ -148,6 +148,7 @@ class DataSet implements JsonSerializable
         }
 
         $this->data[] = $dtValue;
+        $dtValue->setDataSet($this);
         $this->numberOfValues = count($this->data());
         if ($dtValue->dateTime()->getTimestamp() < $this->firstDateTime->getTimestamp()) {
             $this->firstDateTime = new DateTime(sprintf("@%s", $dtValue->dateTime()->getTimestamp()));

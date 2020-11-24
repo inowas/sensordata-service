@@ -81,7 +81,6 @@ class ParseWSVOnline extends Command
             /** @var DataSet $dataset */
             $dataset = $parameter->dataSets()[count($parameter->dataSets()) - 1];
             $dataset->addDateTimeValue($dateTimeValue);
-            $dateTimeValue->setDataSet($dataset);
 
             $this->em->persist($sensor);
             $this->em->persist($parameter);
