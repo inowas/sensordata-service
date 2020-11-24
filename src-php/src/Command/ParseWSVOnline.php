@@ -85,7 +85,6 @@ class ParseWSVOnline extends Command
             $this->em->persist($sensor);
             $this->em->persist($parameter);
             $this->em->persist($dataset);
-            $this->em->persist($dateTimeValue);
             $this->em->flush();
             $output->writeln('Sensorvalue successfully saved.');
         }
