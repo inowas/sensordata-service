@@ -27,7 +27,7 @@ class RemoveSensorCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Reads UIT-CSV-Files and saves data to database.');
+        $this->setDescription('Removes a sensor from DB.');
         $this->addArgument('id', InputArgument::REQUIRED);
     }
 
