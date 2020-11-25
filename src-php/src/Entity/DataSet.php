@@ -26,7 +26,7 @@ class DataSet implements JsonSerializable
     protected int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Parameter", inversedBy="dataSets", cascade={"remove", "persist"}, orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Parameter", inversedBy="dataSets", cascade={"remove", "persist"})
      * @ORM\JoinColumn(name="parameter_id", referencedColumnName="id")
      */
     protected Parameter $parameter;
@@ -62,7 +62,7 @@ class DataSet implements JsonSerializable
     protected DateTime $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="DateTimeValue", mappedBy="dataSet", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="DateTimeValue", mappedBy="dataSet", cascade={"remove", "persist"}, orphanRemoval=true)
      */
     private Collection $data;
 
