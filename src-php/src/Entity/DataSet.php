@@ -26,7 +26,7 @@ class DataSet implements JsonSerializable
     protected int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Parameter", inversedBy="dataSets", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Parameter", inversedBy="dataSets", cascade={"remove", "persist"}, orphanRemoval=true)
      * @ORM\JoinColumn(name="parameter_id", referencedColumnName="id")
      */
     protected Parameter $parameter;

@@ -46,7 +46,7 @@ class Parameter implements JsonSerializable
     private string $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\DataSet", mappedBy="parameter", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\DataSet", mappedBy="parameter", cascade={"remove", "persist"}, orphanRemoval=true)
      * @Groups({"parameter_details"})
      */
     private Collection $dataSets;

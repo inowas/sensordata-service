@@ -48,7 +48,7 @@ class Sensor implements JsonSerializable
 
     /**
      * @var ArrayCollection $parameters
-     * @ORM\OneToMany(targetEntity="App\Entity\Parameter", mappedBy="sensor", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Parameter", mappedBy="sensor", cascade={"remove", "persist"}, orphanRemoval=true)
      * @Groups({"sensor_details"})
      */
     private Collection $parameters;
