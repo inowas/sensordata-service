@@ -10,15 +10,20 @@ WITH sensors AS (
     FROM public.sensors s_1
              JOIN parameters p ON s_1.id = p.sensor_id
     GROUP BY p.type, s_1.id, s_1.project, s_1.name, p.name
-    ORDER BY s_1.id
+    ORDER BY s_1.id, p.name
 )
+
 SELECT s.id,
        s.name,
        s.project,
        s.location,
        array_agg(s.parameter_name) AS parameters
 FROM sensors s
-GROUP BY s.id, s.name, s.project, s.location;
+GROUP BY s.id, s.name, s.project, s.location
+ORDER BY s.project, s.name;
+
+alter table view_sensor_parameters
+    owner to inowas;
 
 alter table view_sensor_parameters
     owner to inowas;
