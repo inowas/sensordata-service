@@ -92,9 +92,8 @@ class LoadUitFiles extends Command
                 }
             }
 
-            if ($sensor->name() !== $sensorName && $sensor->project() !== $projectName) {
+            if ($sensor->name() !== $sensorName || $sensor->project() !== $projectName) {
                 $sensor = $this->loadSensor($projectName, $sensorName, $output);
-
                 $this->sensorParameters = [];
                 foreach ($sensor->parameters() as $parameter) {
                     $this->sensorParameters[$parameter->name()] = $parameter;
