@@ -123,8 +123,8 @@ class Sensor implements JsonSerializable
             return $name === $parameter->name();
         });
 
-        if (count($filteredParameter) === 1) {
-            return $filteredParameter[0];
+        if (count($filteredParameter) > 0) {
+            return $filteredParameter->first();
         }
 
         return null;

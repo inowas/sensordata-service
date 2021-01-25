@@ -1,8 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Command;
+
+ini_set('memory_limit', '2048M');
 
 use App\Entity\DataSet;
 use App\Entity\DateTimeValue;
@@ -173,7 +174,7 @@ class LoadUitFiles extends Command
                         continue;
                     }
                     $parameterName = $this->get_between($headerCell, '{', '}');
-                    if ($parameterName === false || strlen($parameterName) === 0) {
+                    if ($parameterName === false || $parameterName === '') {
                         throw new Exception('Wrong Header Format.');
                     }
                     $header[] = $parameterName;

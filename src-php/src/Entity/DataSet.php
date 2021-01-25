@@ -184,6 +184,11 @@ class DataSet implements JsonSerializable
         ];
     }
 
+    public function filename(): string
+    {
+        return $this->filename;
+    }
+
     public function setParameter(Parameter $parameter): DataSet
     {
         $this->parameter = $parameter;

@@ -114,7 +114,8 @@ class Parameter implements JsonSerializable
                 'first' => $dataSet->firstDateTime()->format(DATE_ATOM),
                 'last' => $dataSet->lastDateTime()->format(DATE_ATOM),
                 'numberOfValues' => $dataSet->numberOfValues(),
-                'dataSource' => $dataSet->dataSource()->toInt()
+                'dataSource' => $dataSet->dataSource()->toInt(),
+                'filename' => $dataSet->filename()
             ];
         }
 

@@ -180,6 +180,15 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "spatie/backtrace": {
+        "version": "1.0.0"
+    },
+    "spatie/macroable": {
+        "version": "1.0.1"
+    },
+    "spatie/ray": {
+        "version": "1.9.1"
+    },
     "symfony/asset": {
         "version": "v5.1.5"
     },
