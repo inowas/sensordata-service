@@ -182,13 +182,16 @@ class LoadSuezFiles extends Command
                 continue;
             }
 
+            // Check if a date is provided
+            if (strpos($d[$dateTimeColumn], '/') === false) {
+                continue;
+            }
             $dateTime = new DateTime(str_replace('/', '-', $d[$dateTimeColumn]));
             $value = (float)str_replace([','], ['.'], $d[$valueColumn]);
             $dtValue = DateTimeValue::fromDateTimeValue($dateTime, $value);
             $data[] = $dtValue;
         }
         fclose($handle);
-
         return $data;
     }
 
