@@ -58,11 +58,18 @@ class ParseAmpeqSensorsBra2 extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+
+        $output->writeln('-------------------------------');
         $id = $input->getArgument('id');
+
+        $output->writeln(sprintf('Read data for Sensor: %s', $id));
+
+
         $start = $input->getArgument('start');
 
         if (!array_key_exists($id, $this->sensorMap)) {
             $output->writeln(sprintf('Sensor with id %s not found!', $id));
+            $output->writeln('-------------------------------');
             return Command::FAILURE;
         }
 
@@ -73,6 +80,7 @@ class ParseAmpeqSensorsBra2 extends Command
             $sensor = $this->em->getRepository(Sensor::class)->findOneBy(['name' => $id]);
             if (!$sensor instanceof Sensor) {
                 $output->writeln(sprintf('Sensor with name %s not found!', $id));
+                $output->writeln('-------------------------------');
                 return Command::FAILURE;
             }
 
@@ -86,6 +94,7 @@ class ParseAmpeqSensorsBra2 extends Command
             $dataSets = $parameter->dataSets();
             if (count($dataSets) === 0) {
                 $output->writeln(sprintf('No dataset saved already'));
+                $output->writeln('-------------------------------');
                 return Command::FAILURE;
             }
 
@@ -108,10 +117,12 @@ class ParseAmpeqSensorsBra2 extends Command
         $content = file_get_contents($url);
         if ($content === false) {
             $output->writeln('Measurement not found!');
+            $output->writeln('-------------------------------');
             return Command::FAILURE;
         }
 
         $dateTimeValues = $this->readDateTimeValuesFromContentString($content);
+        $output->writeln(sprintf('Got %s new data values.', count($dateTimeValues)));
 
         if (count($dateTimeValues) === 0) {
             $output->writeln('No newer data found.');
@@ -137,29 +148,28 @@ class ParseAmpeqSensorsBra2 extends Command
         $this->em->persist($dataset);
         $this->em->flush();
 
+        $output->writeln('Saved!');
+        $output->writeln('-------------------------------');
+
         return Command::SUCCESS;
     }
 
     private function readDateTimeValuesFromContentString(string $content): array
     {
         $dateTimeValues = [];
-        $lineSeparators = ['<br />', "\r\n"];
-        foreach ($lineSeparators as $lineSeparator) {
-            if (strpos($content, $lineSeparator) === false) {
+        $lineSeparator = "\r\n";
+        if (strpos($content, $lineSeparator) === false) {
+            return $dateTimeValues;
+        }
+
+        $lines = explode($lineSeparator, $content);
+        foreach ($lines as $idx => $line) {
+            if ($idx === 0 || $line === '') {
                 continue;
             }
 
-            $lines = explode($lineSeparator, $content);
-            foreach ($lines as $idx => $line) {
-                if ($idx === 0 || $line === '') {
-                    continue;
-                }
-
-                [$timestamp, $value] = explode(";", $line);
-                $dateTimeValues[] = DateTimeValue::fromTimestampValue((int)$timestamp, (float)$value);
-            }
-
-            break;
+            [$timestamp, $value] = explode(";", $line);
+            $dateTimeValues[] = DateTimeValue::fromTimestampValue((int)$timestamp, (float)$value);
         }
 
         return $dateTimeValues;
