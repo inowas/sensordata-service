@@ -148,7 +148,7 @@ class Parameter implements JsonSerializable
         return $data;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id(),

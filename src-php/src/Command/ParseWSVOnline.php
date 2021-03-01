@@ -35,6 +35,12 @@ class ParseWSVOnline extends Command
         $this->addArgument('stations', InputArgument::REQUIRED, 'The name, number or uuid of the stations, comma separated.');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     * @throws \JsonException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stations = $input->getArgument('stations');
@@ -55,7 +61,7 @@ class ParseWSVOnline extends Command
             $location = json_encode([
                 'lat' => $response->latitude(),
                 'lon' => $response->longitude(),
-                'gaugeZero' => $response->getGauge($shortName) ?? ''
+                'gaugeZero' => $response->getGauge($shortName) ?? 0.0
             ], JSON_THROW_ON_ERROR);
 
             $datetime = $response->getDateTime($shortName);
@@ -86,7 +92,7 @@ class ParseWSVOnline extends Command
             $this->em->persist($parameter);
             $this->em->persist($dataset);
             $this->em->flush();
-            $output->writeln('Sensorvalue successfully saved.');
+            $output->writeln(sprintf('Sensor values for %s successfully saved.', $response->longname()));
         }
 
         return Command::SUCCESS;

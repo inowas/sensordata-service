@@ -7,6 +7,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use JsonSerializable;
 
 /**
@@ -66,7 +67,7 @@ class DateTimeValue implements JsonSerializable
 
     /**
      * @return DateTime
-     * @throws \Exception
+     * @throws Exception
      */
     public function dateTime(): DateTime
     {
