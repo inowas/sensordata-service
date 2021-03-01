@@ -111,17 +111,7 @@ class ParseAmpeqSensorsBra2 extends Command
             return Command::FAILURE;
         }
 
-        $lines = explode("<br />", $content);
-
-        $dateTimeValues = [];
-        foreach ($lines as $idx => $line) {
-            if ($idx === 0 || $line === '') {
-                continue;
-            }
-
-            [$timestamp, $value] = explode(";", $line);
-            $dateTimeValues[] = DateTimeValue::fromTimestampValue((int)$timestamp, (float)$value);
-        }
+        $dateTimeValues = $this->readDateTimeValuesFromContentString($content);
 
         if (count($dateTimeValues) === 0) {
             $output->writeln('No newer data found.');
@@ -148,6 +138,31 @@ class ParseAmpeqSensorsBra2 extends Command
         $this->em->flush();
 
         return Command::SUCCESS;
+    }
+
+    private function readDateTimeValuesFromContentString(string $content): array
+    {
+        $dateTimeValues = [];
+        $lineSeparators = ['<br />', "\r\n"];
+        foreach ($lineSeparators as $lineSeparator) {
+            if (strpos($content, $lineSeparator) === false) {
+                continue;
+            }
+
+            $lines = explode($lineSeparator, $content);
+            foreach ($lines as $idx => $line) {
+                if ($idx === 0 || $line === '') {
+                    continue;
+                }
+
+                [$timestamp, $value] = explode(";", $line);
+                $dateTimeValues[] = DateTimeValue::fromTimestampValue((int)$timestamp, (float)$value);
+            }
+
+            break;
+        }
+
+        return $dateTimeValues;
     }
 
     private function loadSensor(string $projectName, string $sensorName, OutputInterface $output): Sensor
