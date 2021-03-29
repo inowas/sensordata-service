@@ -5,9 +5,11 @@ set -e
 SCRIPT_PATH=$(dirname $0)
 SCRIPT_PATH="$( (cd $SCRIPT_PATH && pwd))"
 
+PASSWORD=$1
+
 INBOX_PATH=$SCRIPT_PATH/data/UIT/inbox
 
-rsync --remove-source-files -azv ssh-w011ec33@w011ec33.kasserver.com:/www/htdocs/w011ec33/uit-sensor-data/processed/ $INBOX_PATH
+sshpass -p "$PASSWORD" rsync --remove-source-files -azv ssh-w011ec33@w011ec33.kasserver.com:/www/htdocs/w011ec33/uit-sensor-data/processed/ $INBOX_PATH
 
 shopt -s nullglob dotglob
 files=("$INBOX_PATH"/*)
