@@ -137,11 +137,15 @@ class LoadSuezFiles extends Command
                     continue;
                 }
 
-                $dateTimeValues = $this->readDataFromFile($csvFile, $key * 2, $key * 2 + 1);
-                $dataset = DataSet::fromDatasourceWithData(DataSource::fromCsvSuez(), $dateTimeValues, $file->getFilename());
-                $dataset->setParameter($parameter);
-                $this->em->persist($dataset);
-                $this->em->flush();
+                try {
+                    $dateTimeValues = $this->readDataFromFile($csvFile, $key * 2, $key * 2 + 1);
+                    $dataset = DataSet::fromDatasourceWithData(DataSource::fromCsvSuez(), $dateTimeValues, $file->getFilename());
+                    $dataset->setParameter($parameter);
+                    $this->em->persist($dataset);
+                    $this->em->flush();
+                } catch (Exception $exception) {
+                    $output->writeln(sprintf('Failed for File: %s, DateTimeColumn: %s, ValueColumn: %s', $csvFile, $key * 2, $key * 2 + 1));
+                }
             }
 
             if ($fs->exists(sprintf("%s/%s", $folderWithProcessedCSVFiles, $file->getFilename()))) {
