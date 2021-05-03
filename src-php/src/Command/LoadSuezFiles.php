@@ -73,35 +73,36 @@ class LoadSuezFiles extends Command
             }
 
             $definedDataSets = [
-                ['FRA1_72523_1' => 'Conductivité Brute {ec} [µS/m]'],
-                ['FRA1_72523_2' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72525' => '[72525] Niveau Piezo 5 Gapeau {h} [m]'],
-                ['FRA1_72526' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72527' => '[72527] Niveau Piezo 7 Gapeau {h} [m]'],
-                ['FRA1_72529' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72530_1' => '[72530] Conductivité Piezo 11 Gapeau {ec} [µS/m]'],
-                ['FRA1_72530_2' => '[72530] Niveau Piezo 11 Gapeau {h} [m]'],
-                ['FRA1_72531_1' => 'Conductivité Brute {ec} [µS/m]'],
-                ['FRA1_72531_2' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72532' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72533' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72534' => '[72534] Niveau Piezo 20 Gapeau {h} [m]'],
-                ['FRA1_72480_1' => '[72480] Niveau NGF puits 2 Père Eternel {h} [m]'],
-                ['FRA1_72480_2' => '(C) Volume jour Refoulement pompe 3 puits 2 (ViaQmesP3) {V} [m3]'],
-                ['FRA1_72480_3' => '(C) Volume jour Refoulement pompe 4 puits 2  (ViaQmesP4) {V} [m3]'],
-                ['FRA1_72480_4' => '(C) Volume jour Refoulement pompe 5 puits 2  (ViaQmesP5) {V} [m3]'],
-                ['FRA1_72480_5' => '(C) Total jour prélèvement des puits Champ Père Eternel {V} [m3]'],
-                ['FRA1_72481_1' => 'Conductivité Brute {ec} [mS/cm]'],
-                ['FRA1_72481_2' => 'Niveau Brut {h} [m]'],
-                ['FRA1_72481_3' => 'Niveau NGF puits 5 Golf Hotel {h} [m]'],
-                ['FRA1_72481_4' => '(C) Volume jour Refoulement pompe 5 forage 5  (ViaQmesPx) {V} [m3]'],
-                ['FRA1_72481_5' => '(C) Total jour prélèvement des puits Champ Golf Hotel {V} [m3]'],
-                ['FRA1_88320_1' => 'Q62B20 - Conductivite Sirene - Q62TM_305 - DT {ec} [µS/m]'],
-                ['FRA1_88320_2' => 'Q62B32 - Debit reseau - Q62TM_317 - DT {V} [m3]'],
-                ['FRA1_88321_1' => 'Q63B12 - Niveau Nappe 1 - Q63TM_307 - DT {h} [m]'],
-                ['FRA1_88321_2' => 'Q63B15 - Niveau Nappe 2 - Q63TM_310 - DT {h} [m]'],
-                ['FRA1_88321_3' => 'Q63B11 - Niveau Bassin 1 - Q63TM_306 - DT {h} [m]'],
-                ['FRA1_88321_4' => 'Q63B14 - Niveau Bassin 2 - Q63TM_309 - DT {h} [m]'],
+                ['FRA1_72523_1' => 'Conductivité Brute {ec} [µS/m]'], // A-B
+                ['FRA1_72523_2' => 'Niveau Brut {h} [m]'], // C-D
+                ['FRA1_72525' => '[72525] Niveau Piezo 5 Gapeau {h} [m]'], // E-F
+                ['FRA1_72526' => 'Niveau Brut {h} [m]'], // G-H
+                ['FRA1_72527' => '[72527] Niveau Piezo 7 Gapeau {h} [m]'], // I-J
+                ['FRA1_72529' => 'Niveau Brut {h} [m]'], // K-L
+                ['FRA1_72530_1' => '[72530] Conductivité Piezo 11 Gapeau {ec} [µS/m]'], // M-N
+                ['FRA1_72530_2' => '[72530] Niveau Piezo 11 Gapeau {h} [m]'], // O-P
+                ['FRA1_72531_1' => 'Conductivité Brute {ec} [µS/m]'], // Q-R
+                ['FRA1_72531_2' => 'Niveau Brut {h} [m]'], // S-T
+                ['FRA1_72532' => 'Niveau Brut {h} [m]'], // U-V
+                ['FRA1_72533' => 'Niveau Brut {h} [m]'], // W-X
+                ['FRA1_72534' => '[72534] Niveau Piezo 20 Gapeau {h} [m]'], // Y-Z
+                ['FRA1_72480_1' => '[72480] Niveau NGF puits 2 Père Eternel {h} [m]'], // AA-AB
+                ['FRA1_72480_2' => '(C) Volume jour Refoulement pompe 3 puits 2 (ViaQmesP3) {V3} [m3]'], // AC-AD
+                ['FRA1_72480_3' => '(C) Volume jour Refoulement pompe 4 puits 2 (ViaQmesP4) {V4} [m3]'], // AE-AF
+                ['FRA1_72480_4' => '(C) Volume jour Refoulement pompe 5 puits 2 (ViaQmesP5) {V5} [m3]'], // AG-AH
+                ['FRA1_72480_5' => '(C) Total jour prélèvement des puits Champ Père Eternel {VT} [m3]'],  // AI-AJ
+                ['FRA1_72481-1' => 'Conductivité Brute {ec} [mS/cm]'], // AK-AL
+                ['FRA1_72481-2' => 'Niveau Brut {h} [m]'], // AM-AN
+                ['FRA1_72481-3' => '(C) Volume jour Refoulement pompe 1 forage 1 (ViaQmesPx) {V1} [m3]'], // AO-AP
+                ['FRA1_72481_4' => 'Niveau NGF puits 5 Golf Hotel {h2} [m]'], // AQ-AR
+                ['FRA1_72481_5' => '(C) Volume jour Refoulement pompe 5 forage 5  (ViaQmesPx) {V5} [m3]'], // AS-AT
+                ['FRA1_72481_6' => '(C) Total jour prélèvement des puits Champ Golf Hotel {VT} [m3]'], // AU-AV
+                ['FRA1_88320_1' => 'Q62B20 - Conductivite Sirene - Q62TM_305 - DT {ec} [µS/m]'], // Aw-AX
+                ['FRA1_88320_2' => 'Q62B32 - Debit reseau - Q62TM_317 - DT {V} [m3]'], // AY-AZ
+                ['FRA1_88321_1' => 'Q63B12 - Niveau Nappe 1 - Q63TM_307 - DT {h1} [m]'], // BA-BB
+                ['FRA1_88321_2' => 'Q63B15 - Niveau Nappe 2 - Q63TM_310 - DT {h2} [m]'], // BC-BD
+                ['FRA1_88321_3' => 'Q63B11 - Niveau Bassin 1 - Q63TM_306 - DT {hb1} [m]'], // BE-BF
+                ['FRA1_88321_4' => 'Q63B14 - Niveau Bassin 2 - Q63TM_309 - DT {hb2} [m]'], // BG-BH
             ];
 
             $output->writeln('Read file: ' . $file->getFilename());
