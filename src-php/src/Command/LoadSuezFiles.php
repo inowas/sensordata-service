@@ -91,9 +91,9 @@ class LoadSuezFiles extends Command
                 ['FRA1_72480_3' => '(C) Volume jour Refoulement pompe 4 puits 2 (ViaQmesP4) {V4} [m3]'], // AE-AF
                 ['FRA1_72480_4' => '(C) Volume jour Refoulement pompe 5 puits 2 (ViaQmesP5) {V5} [m3]'], // AG-AH
                 ['FRA1_72480_5' => '(C) Total jour prélèvement des puits Champ Père Eternel {VT} [m3]'],  // AI-AJ
-                ['FRA1_72481-1' => 'Conductivité Brute {ec} [mS/cm]'], // AK-AL
-                ['FRA1_72481-2' => 'Niveau Brut {h} [m]'], // AM-AN
-                ['FRA1_72481-3' => '(C) Volume jour Refoulement pompe 1 forage 1 (ViaQmesPx) {V1} [m3]'], // AO-AP
+                ['FRA1_72481_1' => 'Conductivité Brute {ec} [mS/cm]'], // AK-AL
+                ['FRA1_72481_2' => 'Niveau Brut {h} [m]'], // AM-AN
+                ['FRA1_72481_3' => '(C) Volume jour Refoulement pompe 1 forage 1 (ViaQmesPx) {V1} [m3]'], // AO-AP
                 ['FRA1_72481_4' => 'Niveau NGF puits 5 Golf Hotel {h2} [m]'], // AQ-AR
                 ['FRA1_72481_5' => '(C) Volume jour Refoulement pompe 5 forage 5  (ViaQmesPx) {V5} [m3]'], // AS-AT
                 ['FRA1_72481_6' => '(C) Total jour prélèvement des puits Champ Golf Hotel {VT} [m3]'], // AU-AV
