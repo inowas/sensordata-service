@@ -145,6 +145,15 @@ class LoadSuezFiles extends Command
                     $this->em->flush();
                 } catch (Exception $exception) {
                     $output->writeln(sprintf('Failed for File: %s, DateTimeColumn: %s, ValueColumn: %s', $csvFile, $key * 2, $key * 2 + 1));
+
+                    // available methods: ->isQuiet(), ->isVerbose(), ->isVeryVerbose(), ->isDebug()
+                    if ($output->isVerbose()) {
+                        $output->writeln(sprintf("File: %s", $csvFile));
+                        $output->writeln(sprintf("DateTime: %s", $key * 2));
+                        $output->writeln(sprintf("Value: %s", $key * 2 + 1));
+                        $output->writeln(sprintf("Exception: %s", $exception));
+
+                    }
                 }
             }
 
@@ -182,14 +191,13 @@ class LoadSuezFiles extends Command
 
         $data = [];
         $lineCounter = 0;
-        while (($d = fgetcsv($handle, 10000, ",")) !== FALSE) {
+        while (($d = fgetcsv($handle, 10000, ";")) !== FALSE) {
             if ($lineCounter++ < 4) {
                 continue;
             }
 
-
             // Check if a date is provided
-            if ($d[$dateTimeColumn] === '') {
+            if (!isset($d[$dateTimeColumn]) || $d[$dateTimeColumn] === '') {
                 continue;
             }
 
