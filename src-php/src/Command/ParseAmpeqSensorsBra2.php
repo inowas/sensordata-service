@@ -90,13 +90,15 @@ class ParseAmpeqSensorsBra2 extends Command
             $parameter = $sensor->getParameterWithName(self::PARAMETERNAME);
 
             if (!$parameter instanceof Parameter) {
-                $parameter = Parameter::fromTypeAndName('water_level', self::PARAMETERNAME);
+                $output->writeln(sprintf('Parameter with name %s not found!', self::PARAMETERNAME));
+                return Command::FAILURE;
             }
 
             $dataSets = $parameter->dataSets();
             if (count($dataSets) === 0) {
                 $output->writeln(sprintf('No dataset saved already'));
                 $output->writeln('-------------------------------');
+                return Command::FAILURE;
             }
 
             $latest = 0;
