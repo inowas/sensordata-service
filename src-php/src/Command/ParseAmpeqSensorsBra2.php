@@ -66,8 +66,6 @@ class ParseAmpeqSensorsBra2 extends Command
         $id = $input->getArgument('id');
 
         $output->writeln(sprintf('Read data for Sensor: %s', $id));
-
-
         $start = $input->getArgument('start');
 
         if (!array_key_exists($id, $this->sensorMap)) {
@@ -94,15 +92,17 @@ class ParseAmpeqSensorsBra2 extends Command
                 return Command::FAILURE;
             }
 
-
             if ($parameter->countDatasets() === 0) {
                 $output->writeln(sprintf('No dataset saved already'));
                 $output->writeln('-------------------------------');
                 return Command::FAILURE;
             }
 
-            $latestDataset = $parameter->latestDataset();
-            var_dump($latestDataset->lastDateTime(), $latestDataset->id());
+            $latestDataset = $this->em->getRepository(DataSet::class)->findOneBy(
+                ['parameter_id' => $parameter->id()],
+                ['id' => 'DESC']
+            );
+
             if (!$latestDataset instanceof DataSet) {
                 $output->writeln(sprintf('No lastest dataset found'));
                 $output->writeln('-------------------------------');
@@ -145,7 +145,6 @@ class ParseAmpeqSensorsBra2 extends Command
             $parameter->setSensor($sensor);
             $this->em->persist($parameter);
         }
-
 
         $dataset = DataSet::fromDatasourceWithData(DataSource::fromAmpeqApi(), $dateTimeValues);
         $dataset->setParameter($parameter);
