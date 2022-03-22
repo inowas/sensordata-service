@@ -16,24 +16,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ParseAmpeqSensorsBra2 extends Command
+class ParseAmpeqSensorsBra1 extends Command
 {
-    private const PROJECT_NAME = 'BRA2';
+    private const PROJECT_NAME = 'BRA1';
     private const PARAMETERNAME = 'h';
     private array $sensorMap = [
-        'PT-01' => '0550000000000011',
-        'PT-02' => '0550000000000012',
-        'PZ-07' => '0550000000000013',
-        'PZ-05' => '0550000000000014',
-        'PZ-04' => '0550000000000015',
-        'PZ-06' => '0550000000000016',
-        'PZ-03' => '0550000000000017',
-        'PZ-02' => '0550000000000018',
-        'PZ-01' => '0550000000000024',
+        'EPA-11' => '0550000000000027',
+        'EPA-12' => '0550000000000028',
+        'EPA-13' => '0550000000000029',
     ];
 
 
-    protected static $defaultName = 'app:parse-ampeq:bra2';
+    protected static $defaultName = 'app:parse-ampeq:bra1';
 
     private EntityManagerInterface $em;
 
