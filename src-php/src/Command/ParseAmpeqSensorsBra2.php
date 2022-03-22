@@ -99,7 +99,7 @@ class ParseAmpeqSensorsBra2 extends Command
             }
 
             $latestDataset = $this->em->getRepository(DataSet::class)->findOneBy(
-                ['parameter_id' => $parameter->id()],
+                ['parameter' => $parameter->id()],
                 ['id' => 'DESC']
             );
 
