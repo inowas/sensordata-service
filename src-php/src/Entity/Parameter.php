@@ -47,7 +47,7 @@ class Parameter implements JsonSerializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DataSet", mappedBy="parameter", cascade={"remove", "persist"}, orphanRemoval=true)
-     * @ORM\OrderBy({"lastDateTime" = "DESC"})
+     * @ORM\OrderBy({"lastDateTime" = "ASC"})
      * @Groups({"parameter_details"})
      */
     private Collection $dataSets;
