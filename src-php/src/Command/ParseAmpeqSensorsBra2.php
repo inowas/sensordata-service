@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\DBAL\Logging\DebugStack;
 
 class ParseAmpeqSensorsBra2 extends Command
 {
@@ -101,6 +102,17 @@ class ParseAmpeqSensorsBra2 extends Command
             $latestDataset = $this->em->getRepository(DataSet::class)->findOneBy(
                 ['parameter' => $parameter->id()],
                 ['id' => 'DESC']
+            );
+
+            $logger = new DebugStack();
+            $this->em->getConnection()
+                ->getConfiguration()
+                ->setSQLLogger($logger);
+            $current = $logger->queries[$logger->currentQuery];
+            echo sprintf(
+                '<b>query:</b> %s, <b>params:</b> [%s]',
+                $current['sql'],
+                implode($current['params'])
             );
 
             if (!$latestDataset instanceof DataSet) {
