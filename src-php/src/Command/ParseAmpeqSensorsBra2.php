@@ -94,21 +94,21 @@ class ParseAmpeqSensorsBra2 extends Command
                 return Command::FAILURE;
             }
 
-            $dataSets = $parameter->dataSets();
-            if (count($dataSets) === 0) {
+
+            if ($parameter->countDatasets() === 0) {
                 $output->writeln(sprintf('No dataset saved already'));
                 $output->writeln('-------------------------------');
                 return Command::FAILURE;
             }
 
-            $latest = 0;
-            /** @var DataSet $dataSet */
-            foreach ($dataSets as $dataSet) {
-                if ($dataSet->lastDateTime()->getTimestamp() > $latest) {
-                    $latest = $dataSet->lastDateTime()->getTimestamp();
-                }
+            $latestDataset = $parameter->latestDataset();
+            if (!$latestDataset instanceof DataSet) {
+                $output->writeln(sprintf('No lastest dataset found'));
+                $output->writeln('-------------------------------');
+                return Command::FAILURE;
             }
 
+            $latest = $latestDataset->lastDateTime()->getTimestamp();
             $output->writeln(sprintf('Latest value: %s', $latest));
             $start = $latest + 1;
             $output->writeln(sprintf('New start value: %s', $start));

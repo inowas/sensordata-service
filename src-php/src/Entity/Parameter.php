@@ -47,6 +47,7 @@ class Parameter implements JsonSerializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DataSet", mappedBy="parameter", cascade={"remove", "persist"}, orphanRemoval=true)
+     * @ORM\OrderBy({"lastDateTime" = "DESC"})
      * @Groups({"parameter_details"})
      */
     private Collection $dataSets;
@@ -91,6 +92,20 @@ class Parameter implements JsonSerializable
     public function dataSets(): array
     {
         return $this->dataSets->toArray();
+    }
+
+    public function countDatasets(): int
+    {
+        return $this->dataSets->count();
+    }
+
+    public function latestDataset(): ?DataSet
+    {
+        if ($this->dataSets->isEmpty()) {
+            return null;
+        }
+
+        return $this->dataSets->last();
     }
 
     public function addDataSet(DataSet $ds): self
