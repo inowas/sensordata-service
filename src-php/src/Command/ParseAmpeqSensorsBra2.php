@@ -102,7 +102,7 @@ class ParseAmpeqSensorsBra2 extends Command
             }
 
             $latestDataset = $parameter->latestDataset();
-            var_dump($latestDataset);
+            var_dump($latestDataset->lastDateTime());
             if (!$latestDataset instanceof DataSet) {
                 $output->writeln(sprintf('No lastest dataset found'));
                 $output->writeln('-------------------------------');
