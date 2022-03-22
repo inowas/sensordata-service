@@ -103,9 +103,6 @@ class ParseAmpeqSensorsBra2 extends Command
                 ['id' => 'DESC']
             );
 
-            /** @var DataSet $latestDataset  */
-            var_dump($latestDataset->id());
-
             if (!$latestDataset instanceof DataSet) {
                 $output->writeln(sprintf('No lastest dataset found'));
                 $output->writeln('-------------------------------');
