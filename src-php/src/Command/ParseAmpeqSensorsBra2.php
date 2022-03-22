@@ -99,15 +99,13 @@ class ParseAmpeqSensorsBra2 extends Command
                 return Command::FAILURE;
             }
 
+            $logger = new DebugStack();
+            $this->em->getConnection()->getConfiguration()->setSQLLogger($logger);
             $latestDataset = $this->em->getRepository(DataSet::class)->findOneBy(
                 ['parameter' => $parameter->id()],
                 ['id' => 'DESC']
             );
 
-            $logger = new DebugStack();
-            $this->em->getConnection()
-                ->getConfiguration()
-                ->setSQLLogger($logger);
             $current = $logger->queries[$logger->currentQuery];
             echo sprintf(
                 '<b>query:</b> %s, <b>params:</b> [%s]',
