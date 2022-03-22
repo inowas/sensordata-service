@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+ini_set("memory_limit", "-1");
+
 use App\Entity\DataSet;
 use App\Entity\DateTimeValue;
 use App\Entity\Parameter;
