@@ -5,8 +5,6 @@ services:
     ports:
       - "5432:5432"
 
-  php:
-
   flask-api:
     environment:
       - PYTHONUNBUFFERED=1

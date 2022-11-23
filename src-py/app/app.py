@@ -3,6 +3,8 @@ from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import os
+import time
+import json
 
 db = SQLAlchemy()
 
@@ -55,14 +57,6 @@ def sensor_data(project, sensor, parameter):
             ', '.join(valid_date_formats)
         ))
 
-    count = db.engine.execute("select count(*) from sensors s join parameters p on \
-        s.id = p.sensor_id where s.name =\'{0}\' and s.project = \'{1}\' and p.name = \'{2}\';".format(
-        sensor, project, parameter
-    )).scalar()
-
-    if count == 0:
-        return jsonify([])
-
     query = "select date_time, value from view_data_raw " \
             "where sensor_name='{0}' " \
             "and project_name = '{1}' " \
@@ -111,3 +105,29 @@ def sensor_data(project, sensor, parameter):
 
     df = df.reset_index(level=0)
     return df.to_json(date_unit='s', date_format=date_format, orient='records')
+
+
+@app.route('/sensors/project/<project>/latest')
+def sensor_data_latest(project):
+
+    query = "select project_name, sensor_name, parameter_name, extract(epoch from date_time) as timestamp, value from view_data_raw " \
+            "where project_name='{0}' " \
+        .format(project)
+
+    since = request.args.get('since', None)
+    min_date_time = time.time() - 30 * 84600
+    if since is None:
+        since = min_date_time
+    if since is not None:
+        if since < time.time() - 30 * 84600:
+            since = time.time() - 30 * 84600
+
+    query += "and date_time >= to_timestamp({0}) ".format(int(since))
+    query += "ORDER BY date_time"
+
+    json_data = []
+    rv = db.engine.execute(query)
+    for result in rv:
+        json_data.append(dict(zip(result.keys(), result)))
+
+    return json.dumps(json_data, default=str), 200
