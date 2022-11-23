@@ -79,6 +79,12 @@ Example:
 http --json https://sds.example/sensors/project/DEU1/sensor/I-6/parameter/ec?timeResolution=1D&dateFormat=iso&start=1577836800&end=1609459200&gt=-100.0&excl=0
 ```
 
+Get latest value from all sensors within a project
+
+```
+http --json https://sds.example/sensors/project/DEU1/latest
+```
+
 ## Production use
 
 ```
