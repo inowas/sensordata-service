@@ -119,7 +119,7 @@ def sensor_data_latest(project):
     if since is None:
         since = min_date_time
     if since is not None:
-        if since < time.time() - 30 * 84600:
+        if int(since) < time.time() - 30 * 84600:
             since = time.time() - 30 * 84600
 
     query += "and date_time >= to_timestamp({0}) ".format(int(since))
