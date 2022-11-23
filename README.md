@@ -82,8 +82,12 @@ http --json https://sds.example/sensors/project/DEU1/sensor/I-6/parameter/ec?tim
 Get latest value from all sensors within a project
 
 ```
-http --json https://sds.example/sensors/project/DEU1/latest
+http --json https://sds.example/sensors/project/DEU1/latest?since=1669065118
 ```
+
+Optional parameters as search string in url
+
+* since (unix timestamp)
 
 ## Production use
 
